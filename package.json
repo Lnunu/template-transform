@@ -1,0 +1,20 @@
+{
+  "name": "template-transform",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "module": "main.js",
+  "type": "module",
+  "scripts": {
+    "start:ledger": "cross-env FILE_CODE=ledger node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "cross-env": "^7.0.3",
+    "xlsx": "^0.18.5"
+  }
+}
