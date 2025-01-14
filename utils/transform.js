@@ -8,22 +8,25 @@ export function composeDataByMapConfig(jsonDataArray, mapConfig) {
   }
 
   return jsonDataArray.reduce((acc, rowData) => {
+    const rowDataRaw = JSON.parse(JSON.stringify(rowData));
     Object.keys(mapConfig).forEach((key) => {
       const fieldMap = mapConfig[key];
       const field = fieldMap.field;
       const transform = fieldMap.transform;
       if (transform) {
-        rowData[key] = _transformHandler(rowData[field], transform);
+        rowData[key] = _transformHandler(rowDataRaw[field], transform);
       } else {
-        rowData[key] = rowData[field];
+        rowData[key] = rowDataRaw[field];
       }
     });
     // 在处理数据后再清除字段，防止在映射过程中无法找到原字段数据
-    Object.keys(mapConfig).forEach((key) => {
-      const fieldMap = mapConfig[key];
-      const field = fieldMap.field;
-      delete rowData[field];
-    });
+    // Object.keys(mapConfig).forEach((key) => {
+    //   const fieldMap = mapConfig[key];
+    //   const field = fieldMap.field;
+    //   if (key !== field) {
+    //     delete rowData[field];
+    //   }
+    // });
     return acc.concat(rowData);
   }, []);
 }

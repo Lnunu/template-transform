@@ -2,7 +2,7 @@ import xlsx from "xlsx";
 import path from "path";
 
 function resolvePath(filePath) {
-  return path.join(process.cwd(), "cs-mdm", filePath);
+  return path.join(process.cwd(), filePath);
 }
 
 /**

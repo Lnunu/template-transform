@@ -28,26 +28,36 @@ export function generateOrgSubTableJsonData(uniqueMap) {
   return orgSubTableJsonData;
 }
 
+const typeMap = {
+  供应商: "SUPPLIER",
+  客户: "CUSTOMER",
+};
+
 /**
  * 组织去重，客商在一个组织下面只能有一条数据
+ * 增加类型字段组合：供应商/客户会根据组织组合
  */
 function getOrgCodeMap(orgDataList) {
   const orgCodeMap = new Map();
   for (const orgData of orgDataList) {
-    const orgCode = orgData.ORG_CODE;
-    orgCodeMap.set(orgCode, orgData);
+    if (orgCodeMap.has(orgData.ORG_CODE)) {
+      const mapOrgData = orgCodeMap.get(orgData.ORG_CODE);
+      // 没有当前类型的话就添加
+      if (mapOrgData.type.indexOf(orgData.type) === -1) {
+        mapOrgData.type = mapOrgData.type + "/" + orgData.type;
+      }
+    } else {
+      const orgCode = orgData.ORG_CODE;
+      orgCodeMap.set(orgCode, orgData);
+    }
   }
   return orgCodeMap;
 }
 
 function csTypeHandler(type) {
-  const map = {
-    供应商: "SUPPLIER",
-    客户: "CUSTOMER",
-  };
   const typeArr = type.split("/");
   const typeArrTransform = typeArr.map((item) => {
-    return map[item];
+    return typeMap[item];
   });
   return typeArrTransform.join(",");
 }

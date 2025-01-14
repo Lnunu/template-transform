@@ -12,7 +12,7 @@ import { getTaxpayerIdForJsonArray } from "./fetchCode.js";
 import { generateOrgSubTableJsonData } from "./org.sub.js";
 
 async function main() {
-  const sourceExcelData = getExcelData("./source/客商数据.xlsx", {
+  const sourceExcelData = getExcelData("./cs-mdm/source/客商数据.xlsx", {
     defval: null,
     range: 1,
   });
@@ -36,31 +36,38 @@ async function main() {
   );
 
   // 获取编码
-  const removalDuplicateMapAndCode = await getTaxpayerIdForJsonArray(
-    removalDuplicateMap,
-    "CS_CODE"
-  );
+  let removalDuplicateMapAndCode = removalDuplicateMap;
 
-  // 主表去重后的数据
-  const removeDuplicateJsonDataArray = getDuplicateRemovalData(
+  if (mainTableConfig.isFetchCsCode) {
+    removalDuplicateMapAndCode = await getTaxpayerIdForJsonArray(
+      removalDuplicateMap,
+      "CS_CODE"
+    );
+  }
+
+  // 主表数据
+  const mainTableJsonDataArray = getDuplicateRemovalData(
     removalDuplicateMapAndCode
   );
   // 主表写入
   writeExcelByTemplate(
-    "./target/2024-12-27-客商模板下载.xlsx",
-    "./output/output_客商.xlsx",
-    removeDuplicateJsonDataArray
+    "./cs-mdm/target/客商模板.xlsx",
+    "./cs-mdm/output/output_客商.xlsx",
+    mainTableJsonDataArray
   );
+  console.log("主表写入完成");
   // 组织子表
   const orgSubJsonData = generateOrgSubTableJsonData(
     removalDuplicateMapAndCode
   );
   // 组织子表写入
   writeExcelByTemplate(
-    "./target/2024-12-27-所属组织信息模板下载.xlsx",
-    "./output/output_组织.xlsx",
+    "./cs-mdm/target/所属组织信息模板.xlsx",
+    "./cs-mdm/output/output_组织.xlsx",
     orgSubJsonData
   );
+  console.log("子表写入完成");
+  console.log("done!");
 }
 
 main();

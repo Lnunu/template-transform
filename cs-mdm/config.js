@@ -1,21 +1,22 @@
 export const mainTableConfig = {
+  isFetchCsCode: true,
   headerCodeRow: 1,
   headerNameRow: 2,
   fieldMap: {
     CS_CODE: {
-      field: "cs_code",
+      field: "CS_CODE",
       description: "客商编码",
     },
     CS_NAME: {
-      field: "cs_name",
+      field: "CS_NAME",
       description: "客商名称",
     },
     SHORT_NAME: {
-      field: "short_name",
+      field: "SHORT_NAME",
       description: "客商简称",
     },
     DATA_SOURCE: {
-      field: "data_source",
+      field: "DATA_SOURCE",
       description: "数据来源",
       transform: {
         type: "map",
@@ -23,33 +24,35 @@ export const mainTableConfig = {
           华山牧: "1",
           牧业分公司: "1",
           中垦供应链: "1",
+          中垦天宁牧业有限公司: "1",
           天友: "2",
         },
       },
     },
     ORG_NAME: {
-      field: "data_source",
+      field: "DATA_SOURCE",
       description: "数据来源-组织名称",
     },
     ORG_CODE: {
-      field: "data_source",
+      field: "DATA_SOURCE",
       description: "数据来源-组织名称",
       transform: {
         type: "map",
         map: {
-          华山牧: "00",
-          牧业分公司: "01",
-          中垦供应链: "02",
-          天友: "03",
+          华山牧: "1004",
+          牧业分公司: "1005",
+          中垦供应链: "1007",
+          中垦天宁牧业有限公司: "1003",
+          天友: "HB103",
         },
       },
     },
     LEGAL_PERSON: {
-      field: "legal_person",
+      field: "LEGAL_PERSON",
       description: "法定代表人",
     },
     TAXPAYER_ID: {
-      field: "taxpayer_id",
+      field: "TAXPAYER_ID",
       description: "统一社会信用代码",
     },
     CONTACT: {

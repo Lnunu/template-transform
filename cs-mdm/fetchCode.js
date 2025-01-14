@@ -1,8 +1,8 @@
-import { requestMdm } from "../utils/index.js";
+import { requestMdmMagic } from "../utils/index.js";
 
 export function fetchQueryByTaxpayerId(taxpayerId) {
   const url = `/mapi/cs/duplicate_check`;
-  return requestMdm(url, {
+  return requestMdmMagic(url, {
     method: "get",
     params: {
       uniqueValue: taxpayerId,
@@ -16,51 +16,43 @@ export async function getTaxpayerIdForJsonArray(uniqueMap, field) {
   let index = 1;
   const _uniqueMap = new Map();
 
-  for await (const taxpayerId of uniqueMap.keys()) {
-    if (index % size === 0) {
-      await Promise.all(stack);
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
-      stack = [];
-    }
-
-    stack.push(
-      new Promise((resolve) => {
-        console.log(`正在获取${taxpayerId}的客商编码`);
-        _uniqueMap.set(
-          taxpayerId,
-          uniqueMap.get(taxpayerId).map((i) => {
-            i[field] = taxpayerId;
-            return i;
-          })
-        );
-        resolve();
-        return;
-        fetchQueryByTaxpayerId(taxpayerId)
-          .then((res) => {
-            if (res.data.code == 200) {
-              _uniqueMap.set(taxpayerId, {
-                code: res.data.data.cs_code,
-                repeatData: uniqueMap.get(taxpayerId),
-              });
-            } else {
-              _uniqueMap.set(taxpayerId, {
-                code: "-1",
-                repeatData: uniqueMap.get(taxpayerId),
-              });
-              console.log(`${taxpayerId}获取失败`);
-            }
-            resolve();
-          })
-          .catch(() => {
-            _uniqueMap.set(taxpayerId, {
-              code: "-1",
-              repeatData: uniqueMap.get(taxpayerId),
-            });
-            console.log(`${taxpayerId}获取失败`);
-            resolve();
-          });
+  function _setUniqueMap(taxpayerId, code) {
+    _uniqueMap.set(
+      taxpayerId,
+      uniqueMap.get(taxpayerId).map((i) => {
+        i[field] = code;
+        return i;
       })
     );
+  }
+
+  for await (const taxpayerId of uniqueMap.keys()) {
+    stack.push(
+      new Promise(async (resolve) => {
+        try {
+          console.log(`正在获取${taxpayerId}的客商编码`);
+          // _setUniqueMap(taxpayerId, taxpayerId);
+          // resolve();
+          // return;
+          const res = await fetchQueryByTaxpayerId(taxpayerId);
+          if (res?.data?.code == 200) {
+            _setUniqueMap(taxpayerId, res.data.data.code);
+          } else {
+            throw res.data;
+          }
+        } catch (error) {
+          const errorMessage = `${taxpayerId}获取失败:${JSON.stringify(error)}`;
+          _setUniqueMap(taxpayerId, errorMessage);
+          console.log(errorMessage);
+        }
+        resolve();
+      })
+    );
+
+    if (index % size === 0 || index === uniqueMap.size) {
+      await Promise.all(stack);
+      stack = [];
+    }
 
     index++;
   }
