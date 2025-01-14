@@ -30,15 +30,20 @@ export async function getTaxpayerIdForJsonArray(uniqueMap, field) {
     stack.push(
       new Promise(async (resolve) => {
         try {
-          console.log(`正在获取${taxpayerId}的客商编码`);
-          // _setUniqueMap(taxpayerId, taxpayerId);
-          // resolve();
-          // return;
-          const res = await fetchQueryByTaxpayerId(taxpayerId);
-          if (res?.data?.code == 200) {
-            _setUniqueMap(taxpayerId, res.data.data.code);
+          const codeData = uniqueMap
+            .get(taxpayerId)
+            .find((i) => i[field]);
+          if (codeData) {
+            console.log(`存在${taxpayerId}的客商编码:${codeData[field]}`);
+            _setUniqueMap(taxpayerId, codeData[field]);
           } else {
-            throw res.data;
+            console.log(`正在获取${taxpayerId}的客商编码`);
+            const res = await fetchQueryByTaxpayerId(taxpayerId);
+            if (res?.data?.code == 200) {
+              _setUniqueMap(taxpayerId, res.data.data.code);
+            } else {
+              throw res.data;
+            }
           }
         } catch (error) {
           const errorMessage = `${taxpayerId}获取失败:${JSON.stringify(error)}`;

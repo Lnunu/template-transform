@@ -3,6 +3,9 @@ export const mainTableConfig = {
   headerCodeRow: 1,
   headerNameRow: 2,
   fieldMap: {
+    TYPE: {
+      field: "type",
+    },
     CS_CODE: {
       field: "CS_CODE",
       description: "客商编码",
@@ -21,11 +24,10 @@ export const mainTableConfig = {
       transform: {
         type: "map",
         map: {
-          华山牧: "1",
+          中垦华山牧乳业有限公司: "1",
+          "中垦牧乳业（集团）股份有限公司供应链分公司": "1",
           牧业分公司: "1",
-          中垦供应链: "1",
-          中垦天宁牧业有限公司: "1",
-          天友: "2",
+          "重庆市天友乳业股份有限公司（合并）": "2",
         },
       },
     },
@@ -39,11 +41,10 @@ export const mainTableConfig = {
       transform: {
         type: "map",
         map: {
-          华山牧: "1004",
+          中垦华山牧乳业有限公司: "1006",
           牧业分公司: "1005",
-          中垦供应链: "1007",
-          中垦天宁牧业有限公司: "1003",
-          天友: "HB103",
+          "中垦牧乳业（集团）股份有限公司供应链分公司": "1007",
+          "重庆市天友乳业股份有限公司（合并）": "HB103",
         },
       },
     },
