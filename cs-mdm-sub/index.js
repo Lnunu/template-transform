@@ -65,8 +65,8 @@ async function main() {
     }
   });
 
-  const errorFile = fs.createWriteStream("./cs-mdm-sub/error.txt");
-  const searchFile = fs.createWriteStream("./cs-mdm-sub/search.txt");
+  const errorFile = fs.createWriteStream("./cs-mdm-sub/output/error.txt");
+  const searchFile = fs.createWriteStream("./cs-mdm-sub/output/search.txt");
 
   let size = csCodeMap.size;
   console.log(`共${size}条数据`);
@@ -75,13 +75,14 @@ async function main() {
     try {
       const res = await fetchMdmQueryByCsCode(code);
       const queryData = res.data.content[0];
-      searchFile.write(`${code}\n\t查询到的数据:${JSON.stringify(queryData)}\n`);
+      searchFile.write(`${code}:\n`);
+      searchFile.write(`\t查询到的数据:${JSON.stringify(queryData)}\n`);
       queryData.ORG_INFO = subData;
       queryData.isCheckSubDataSource = false;
-      searchFile.write(`${code}\n\t推送的数据:${JSON.stringify(queryData)}\n`);
+      searchFile.write(`\t推送的数据:${JSON.stringify(queryData)}\n`);
       const updateRes = await fetchMdmMagicUpdate(queryData);
       size--;
-      console.log(`code:${code},剩余${size}条数据`);
+      console.log(`code:${code},message:${updateRes.data.message},剩余${size}条数据`);
       searchFile.write(`------------------------------------------------------\n`)
     } catch (error) {
       errorFile.write(`${code}:${error.message}\n`);
