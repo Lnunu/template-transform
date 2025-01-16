@@ -12,9 +12,10 @@ import { getTaxpayerIdForJsonArray } from "./fetchCode.js";
 import { generateOrgSubTableJsonData } from "./org.sub.js";
 
 async function main() {
-  const sourceExcelData = getExcelData("./cs-mdm/source/客商数据.xlsx", {
+  const sourceExcelData = getExcelData(mainTableConfig.sourceFilePath, {
     defval: null,
     range: 1,
+    sheetIndex: mainTableConfig.sheetIndex,
   });
 
   // test
@@ -26,7 +27,8 @@ async function main() {
 
   let processedJsonDataArray = composeDataByMapConfig(
     sourceExcelData,
-    mainFileMap
+    mainFileMap,
+    mainTableConfig.isTransform
   );
 
   // 得到去重过后的Map与重复数据
@@ -51,8 +53,8 @@ async function main() {
   );
   // 主表写入
   writeExcelByTemplate(
-    "./cs-mdm/target/客商模板.xlsx",
-    "./cs-mdm/output/output_客商.xlsx",
+    mainTableConfig.mainTableTargetFilePath,
+    mainTableConfig.mainTableOutputFilePath,
     mainTableJsonDataArray
   );
   console.log("主表写入完成");
@@ -62,8 +64,8 @@ async function main() {
   );
   // 组织子表写入
   writeExcelByTemplate(
-    "./cs-mdm/target/所属组织信息模板.xlsx",
-    "./cs-mdm/output/output_组织.xlsx",
+    mainTableConfig.orgSubTableTargetFilePath,
+    mainTableConfig.orgSubTableOutputFilePath,
     orgSubJsonData
   );
   console.log("子表写入完成");

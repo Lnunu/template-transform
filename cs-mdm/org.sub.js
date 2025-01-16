@@ -24,14 +24,17 @@ export function generateOrgSubTableJsonData(uniqueMap) {
         console.log(orgData);
         console.log(error);
       }
-      const _orgData = {
-        cs__CS_CODE: orgData.CS_CODE,
-        BELONG_TYPE: belongType,
-        ORG_CODE: orgData.ORG_CODE,
-        DATA_SOURCE: orgData.DATA_SOURCE,
-        SCOPE_TYPE: "1",
-      };
-      orgSubTableJsonData.push(_orgData);
+      // 存在客户类型则生成子表
+      if (belongType) {
+        const _orgData = {
+          cs__CS_CODE: orgData.CS_CODE,
+          BELONG_TYPE: belongType,
+          ORG_CODE: orgData.ORG_CODE,
+          DATA_SOURCE: orgData.DATA_SOURCE,
+          SCOPE_TYPE: "1",
+        };
+        orgSubTableJsonData.push(_orgData);
+      }
     }
   }
   return orgSubTableJsonData;
@@ -60,6 +63,7 @@ function getOrgCodeMap(orgDataList) {
 }
 
 function csTypeHandler(type) {
+  if (type === undefined) return null;
   const typeArr = type.split("/");
   const typeArrTransform = typeArr.map((item) => {
     return typeMap[item];

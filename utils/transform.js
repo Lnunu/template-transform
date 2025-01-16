@@ -1,4 +1,8 @@
-export function composeDataByMapConfig(jsonDataArray, mapConfig) {
+export function composeDataByMapConfig(
+  jsonDataArray,
+  mapConfig,
+  isTransform = true
+) {
   function _transformHandler(value, transform) {
     const transformType = transform.type;
     if (transformType === "map") {
@@ -13,7 +17,7 @@ export function composeDataByMapConfig(jsonDataArray, mapConfig) {
       const fieldMap = mapConfig[key];
       const field = fieldMap.field;
       const transform = fieldMap.transform;
-      if (transform) {
+      if (transform && isTransform) {
         rowData[key] = _transformHandler(rowDataRaw[field], transform);
       } else {
         rowData[key] = rowDataRaw[field];
