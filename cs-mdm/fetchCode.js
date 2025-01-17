@@ -49,7 +49,7 @@ export async function getTaxpayerIdForJsonArray(uniqueMap, field) {
     const isSame = dataList.every((i) => i[_field] == dataList[0][_field]);
     if (!isSame) {
       throw _error(`数据客商名称不一致`, {
-        repeat: dataList.map((i) => i[_field]).join(","),
+        data: dataList,
       });
     }
   }
@@ -99,8 +99,8 @@ export async function getTaxpayerIdForJsonArray(uniqueMap, field) {
           }
         } catch (error) {
           let errorMessage;
-          if (error.type) {
-            errorMessage = `${taxpayerId}:${error.type}-${JSON.stringify(
+          if (error.data) {
+            errorMessage = `${taxpayerId}:${error.message}-${JSON.stringify(
               error.data
             )}`;
           } else {
