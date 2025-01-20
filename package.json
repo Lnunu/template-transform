@@ -8,6 +8,7 @@
   "scripts": {
     "start:xh2mdm:ledger": "cross-env FILE_CODE=ledger node ./xh2mdm/main.js",
     "start:cs-mdm": "node ./cs-mdm/index.js",
+    "update:cs-mdm": "node ./cs-mdm/update.js",
     "start:cs-mdm-sub": "node ./cs-mdm-sub/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
