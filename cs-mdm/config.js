@@ -4,7 +4,7 @@ export const mainTableConfig = {
   mainTableOutputFilePath: "./cs-mdm/output/output_客商.xlsx",
   orgSubTableTargetFilePath: "./cs-mdm/target/所属组织信息模板.xlsx",
   orgSubTableOutputFilePath: "./cs-mdm/output/output_组织.xlsx",
-  sheetIndex: 8,
+  sheetIndex: 0,
   isTransform: true,
   isFetchCsCode: true,
   headerCodeRow: 1,
